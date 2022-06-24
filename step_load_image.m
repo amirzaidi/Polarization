@@ -1,14 +1,17 @@
-function step_load_image(path, maxVal)
+function step_load_image(path)
     global Imean;
     global Iamp;
 
-    [Y, X, ~] = size(imread(strcat(path, '0.tif')));
+    I = imread(strcat(path, '0.tif'));
+    [Y, X, ~] = size(I);
+    maxVal = intmax(class(I));
+    
     I = gpuArray(zeros(4, Y, X, 3, 'double'));
 
     for x=0:3
         deg = num2str(45 * x);
         buf = gpuArray(imread(strcat(path, deg, '.tif')));
-        I(x+1, :, :, :) = fun_srgb_to_linearrgb(double(buf) ./ maxVal);
+        I(x+1, :, :, :) = fun_srgb_to_linearrgb(double(buf) ./ double(maxVal));
     end
     
     if mod(Y, 2) == 1
