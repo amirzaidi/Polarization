@@ -7,10 +7,10 @@ function k0 = step_iterations(k)
     qyPart = qyTotal / divCount;
     qxPart = qxTotal / divCount;
 
+    % Iamp is upper bounded by Imean, so this is >= 1.0.
     kMax = min(max(0.0001, Imean) ./ max(0.0001, Iamp), [], 3);
-    kMax = max(1.0, kMax);
     
-    % Starting point.
+    % Starting point for k.
     k = min(kMax, k);
 
     % Init pyramids.
