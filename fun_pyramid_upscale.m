@@ -5,6 +5,6 @@ function out = fun_pyramid_upscale(in)
         out{i} = in{i};
     end
     
-    blurred = imgaussfilt(imresize(in{cellsize}, 2.0), 1.36);
+    blurred = imgaussfilt(fun_scaleup2x(in{cellsize}), 1.36);
     out{cellsize - 1} = blurred; % + in{cellsize - 1};
 end

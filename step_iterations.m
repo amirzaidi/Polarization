@@ -51,7 +51,7 @@ function k0 = step_iterations(k)
 
                     kPyr{PyrLevel}(cy, cx) = fun_functional_bilateral_lines(...
                         cy, cx, ImeanPyr{PyrLevel}, IampPyr{PyrLevel}, Idif, kCopy, ...
-                        kMin(cy, cx), kMax(cy, cx), 0.66, 0.02);
+                        kMin(cy, cx), kMax(cy, cx), 0.66, 0.03);
                 end
             end
         end

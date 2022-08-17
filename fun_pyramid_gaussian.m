@@ -4,7 +4,7 @@ function out = fun_pyramid_gaussian(in, scales)
     
     for i=1:scales-1
         out{i} = remaining;
-        remaining = imresize(imgaussfilt(remaining, 1.36), 0.5);
+        remaining = fun_scaledown2x(imgaussfilt(remaining, 1.36));
     end
     
     out{scales} = remaining;
