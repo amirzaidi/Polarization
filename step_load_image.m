@@ -1,17 +1,21 @@
-function step_load_image(path)
+function step_load_image(path, ext, srgb)
     global Imean;
     global Iamp;
 
-    I = imread(strcat(path, '0.tif'));
+    I = imread(strcat(path, '_', '0', '.', ext));
     [Y, X, ~] = size(I);
-    maxVal = intmax(class(I));
+    maxVal = double(intmax(class(I)));
     
     I = gpuArray(zeros(4, Y, X, 3, 'double'));
 
     for x=0:3
         deg = num2str(45 * x);
-        buf = gpuArray(imread(strcat(path, deg, '.tif')));
-        I(x+1, :, :, :) = fun_srgb_to_linearrgb(double(buf) ./ double(maxVal));
+        buf = double(gpuArray(imread(strcat(path, '_', deg, '.', ext))));
+        buf = buf ./ maxVal;
+        if srgb
+            buf = fun_srgb_to_linearrgb(buf);
+        end
+        I(x+1, :, :, :) = buf;
     end
     
     if mod(Y, 2) == 1
@@ -34,5 +38,5 @@ function step_load_image(path)
     clear I;
     
     Iamp = min(Imean, Iamp);
-    fun_edge_extend(64);
+    fun_edge_extend(2 .^ (4 - 1 + 2)); % (PyrLevels - 1) + 2 (for the divcount in iterations).
 end

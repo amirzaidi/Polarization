@@ -13,7 +13,8 @@ function out = fun_functional_bilateral_direct_solve(Imeani, Iampi, sigma_spatia
         % Start vector by only keeping the orthogonal vector.
         
         % Only values with significant differences (>= 0.08) are valid.
-        Valid = StartProjAdd2 >= 0.0064;
+        %Valid = StartProjAdd2 >= 0.0064;
+        Valid = 1;
     end
     
     [ny, nx, ~] = size(Imeani);

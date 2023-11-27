@@ -16,11 +16,11 @@ function out = fun_functional_bilateral(cy, cx, Iweight, sigma_spatial, sigma_to
         for dx = -radius:radius
             cx_shift = max(1, min(nxTotal, cx + dx));
             
-            [Value, Valid] = kappa(cy, cx, cy_shift, cx_shift, dy, dx);
+            [Value, Validity] = kappa(cy, cx, cy_shift, cx_shift, dy, dx);
             
             weight_spatial = fun_gaussian_dist([dy dx], [0 0], 2, sigma_spatial);
             weight_tonal = fun_gaussian_dist(Iweight(cy_shift, cx_shift, :), Iweight(cy, cx, :), 3, sigma_tonal);
-            weight = Valid .* weight_spatial .* weight_tonal;
+            weight = Validity .* weight_spatial .* weight_tonal;
             
             totals = totals + weight .* Value;
             weights = weights + weight;

@@ -20,10 +20,11 @@ function out = fun_functional_bilateral_lines(cy, cx, Imean, Iamp, Idif, k, kMin
             Value = min(max(Value, kMin), kMax);
             % What we get: The k to get from total (mean) to diffuse.
 
-            Valid = ~isnan(Value) & Value >= kMin & Value <= kMax;
-            Valid = Valid | ((dy == 0) & (dx == 0));
+            % Weight by how close we can get to the shifted value.
+            Idif_center_new = max(0.0001, Imean_center - Value .* Iamp_center);
+            Valid = ~isnan(Value) .* fun_gaussian_dist(Idif_center_new, Idif_shift, 3, 0.10);
         end
     end
     
-    out = fun_functional_bilateral(cy, cx, Idif, sigma_spatial, sigma_tonal, @kappa, 1);
+    out = fun_functional_bilateral(cy, cx, Imean - Iamp, sigma_spatial, sigma_tonal, @kappa, 1);
 end
