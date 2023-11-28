@@ -22,7 +22,7 @@ function out = fun_functional_bilateral_lines(cy, cx, Imean, Iamp, Idif, k, kMin
 
             % Weight by how close we can get to the shifted value.
             Idif_center_new = max(0.0001, Imean_center - Value .* Iamp_center);
-            Valid = ~isnan(Value) .* fun_gaussian_dist(Idif_center_new, Idif_shift, 3, 0.10);
+            Valid = ~isnan(Value) .* fun_gaussian_dist(Idif_center_new, Idif_shift, 3, 9990.01);
         end
     end
     
