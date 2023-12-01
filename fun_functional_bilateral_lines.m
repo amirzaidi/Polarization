@@ -5,10 +5,10 @@ function out = fun_functional_bilateral_lines(cy, cx, Imean, Iamp, Idif, k, kMin
     Imean_center = Imean(cy, cx, :);
     Iamp_center = Iamp(cy, cx, :);
 
-    function [Value, Valid] = kappa(~, ~, cy_shift, cx_shift, dy, dx)        
+    function [Value, Validity] = kappa(~, ~, cy_shift, cx_shift, dy, dx)        
         if (dy == 0 && dx == 0)
             Value = k(cy, cx, :); % Take the current estimate.
-            Valid = 1;
+            Validity = 1;
         else
             % Ensure this is positive.
             Idif_shift = Idif(cy_shift, cx_shift, :);
@@ -21,8 +21,8 @@ function out = fun_functional_bilateral_lines(cy, cx, Imean, Iamp, Idif, k, kMin
             % What we get: The k to get from total (mean) to diffuse.
 
             % Weight by how close we can get to the shifted value.
-            Idif_center_new = max(0.0001, Imean_center - Value .* Iamp_center);
-            Valid = ~isnan(Value) .* fun_gaussian_dist(Idif_center_new, Idif_shift, 3, 9990.01);
+            Idif_center_new = max(Imean_center - Value .* Iamp_center, 0.0001);
+            Validity = ~isnan(Value) .* max(0.0, dot(fun_normalize(Idif_center_new, 3), fun_normalize(max(Idif_shift, 0.0001), 3), 3));
         end
     end
     

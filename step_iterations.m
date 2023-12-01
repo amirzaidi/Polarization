@@ -8,7 +8,7 @@ function k0 = step_iterations(k)
     qxPart = qxTotal / divCount;
 
     % Iamp is upper bounded by Imean, so this is >= 1.0.
-    kMax = min(max(0.0001, Imean) ./ max(0.0001, Iamp), [], 3);
+    kMax = min(min(max(0.0001, Imean) ./ max(0.0001, Iamp), [], 3), 50.0);
     
     % Starting point for k.
     k = min(kMax, k);
@@ -16,7 +16,7 @@ function k0 = step_iterations(k)
     % Init pyramids.
     PyrLevel = 4;
     ImeanPyr = fun_pyramid_gaussian(Imean, PyrLevel);
-    IampPyr = fun_pyramid_gaussian(max(0.001, Iamp), PyrLevel);
+    IampPyr = fun_pyramid_gaussian(max(0.0001, Iamp), PyrLevel);
     kPyr = fun_pyramid_gaussian(k, PyrLevel);
     kMaxPyr = fun_pyramid_gaussian(kMax, PyrLevel);
     clear k;
@@ -53,11 +53,11 @@ function k0 = step_iterations(k)
         end
 
         % Bilateral-filter the resulting polarization map, as a noise reduction step.
-%         IterCount2 = 2;
-%         for i = 1:IterCount2
-%             % Do this with the (Mean - k * Amp) to always diffuse towards apparent edges.
-%             kPyr{PyrLevel} = fun_cross_bilateral(kPyr{PyrLevel}, ImeanPyr{PyrLevel} - IampPyr{PyrLevel}, 3.00, 0.25);
-%         end
+        IterCount2 = 2;
+        for i = 1:IterCount2
+            % Do this with the (Mean - Amp) to always diffuse towards apparent edges.
+            kPyr{PyrLevel} = fun_cross_bilateral(kPyr{PyrLevel}, ImeanPyr{PyrLevel} - IampPyr{PyrLevel}, 2.00, 0.05);
+        end
 
         if PyrLevel > 1
             kPyr = fun_pyramid_upscale(kPyr);
