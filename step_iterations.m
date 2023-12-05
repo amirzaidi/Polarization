@@ -31,7 +31,7 @@ function k0 = step_iterations(k)
         kMax = kMaxPyr{PyrLevel};
         kMin = min(kMax, 1.0);
 
-        IterCount1 = 2 * PyrLevel;
+        IterCount1 = 4 * PyrLevel;
         for i = 1:IterCount1
             % Iterative improvements.
             Idif = max(0.0001, ImeanPyr{PyrLevel} - kPyr{PyrLevel} .* IampPyr{PyrLevel});
@@ -46,8 +46,8 @@ function k0 = step_iterations(k)
                     cx = (xOffset+1):(xOffset+qxPartDiv);
 
                     kPyr{PyrLevel}(cy, cx) = fun_functional_bilateral_lines(...
-                        cy, cx, ImeanPyr{PyrLevel}, IampPyr{PyrLevel}, Idif, kCopy, ...
-                        kMin(cy, cx), kMax(cy, cx), 0.66, 0.01);
+                        cy, cx, ImeanPyr{PyrLevel}, IampPyr{PyrLevel}, IampPyr{PyrLevel}, kCopy, ...
+                        kMin(cy, cx), kMax(cy, cx), 0.66, 0.03);
                 end
             end
         end
@@ -56,7 +56,7 @@ function k0 = step_iterations(k)
         IterCount2 = 2;
         for i = 1:IterCount2
             % Do this with the (Mean - Amp) to always diffuse towards apparent edges.
-            kPyr{PyrLevel} = fun_cross_bilateral(kPyr{PyrLevel}, ImeanPyr{PyrLevel} - IampPyr{PyrLevel}, 2.00, 0.05);
+            kPyr{PyrLevel} = fun_cross_bilateral(kPyr{PyrLevel}, IampPyr{PyrLevel}, 2.00, 0.05);
         end
 
         if PyrLevel > 1
