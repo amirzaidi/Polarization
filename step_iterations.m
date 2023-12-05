@@ -34,8 +34,7 @@ function k0 = step_iterations(k)
         IterCount1 = 4 * PyrLevel;
         for i = 1:IterCount1
             % Iterative improvements.
-            Idif = max(0.0001, ImeanPyr{PyrLevel} - kPyr{PyrLevel} .* IampPyr{PyrLevel});
-            kCopy = kPyr{PyrLevel}; % fun_cross_bilateral(kPyr{PyrLevel}, Idif, 2.00, 0.05);
+            kCopy = kPyr{PyrLevel};
             
             % Bring the diffuse components close together.
             for qy = 0:(divCount-1)
@@ -56,7 +55,7 @@ function k0 = step_iterations(k)
         IterCount2 = 2;
         for i = 1:IterCount2
             % Do this with the (Mean - Amp) to always diffuse towards apparent edges.
-            kPyr{PyrLevel} = fun_cross_bilateral(kPyr{PyrLevel}, IampPyr{PyrLevel}, 2.00, 0.05);
+            kPyr{PyrLevel} = fun_cross_bilateral(kPyr{PyrLevel}, IampPyr{PyrLevel}, 2.00, 0.01);
         end
 
         if PyrLevel > 1
